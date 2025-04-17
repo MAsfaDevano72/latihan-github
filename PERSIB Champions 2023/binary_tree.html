@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Tree</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .tree-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .node {
+            display: inline-block;
+            padding: 10px;
+            border: 1px solid black;
+            border-radius: 50%;
+            margin: 5px;
+        }
+        .line {
+            height: 20px;
+            width: 2px;
+            background-color: black;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Binary Tree Visualization</h1>
+    <input type="text" id="nodeValue" placeholder="Masukkan nilai node">
+    <button onclick="addNode()">Tambah Node</button>
+    <div class="tree-container" id="tree"></div>
+    
+    <script>
+        class TreeNode {
+            constructor(value) {
+                this.value = value;
+                this.left = null;
+                this.right = null;
+            }
+        }
+
+        class BinaryTree {
+            constructor() {
+                this.root = null;
+            }
+            
+            insert(value) {
+                const newNode = new TreeNode(value);
+                if (!this.root) {
+                    this.root = newNode;
+                } else {
+                    this._insertNode(this.root, newNode);
+                }
+            }
+            
+            _insertNode(node, newNode) {
+                if (newNode.value < node.value) {
+                    if (!node.left) {
+                        node.left = newNode;
+                    } else {
+                        this._insertNode(node.left, newNode);
+                    }
+                } else {
+                    if (!node.right) {
+                        node.right = newNode;
+                    } else {
+                        this._insertNode(node.right, newNode);
+                    }
+                }
+            }
+            
+            visualize(node = this.root, parentElement = document.getElementById('tree')) {
+                if (!node) return;
+                
+                const nodeElement = document.createElement('div');
+                nodeElement.classList.add('node');
+                nodeElement.textContent = node.value;
+                parentElement.appendChild(nodeElement);
+                
+                if (node.left || node.right) {
+                    const line = document.createElement('div');
+                    line.classList.add('line');
+                    parentElement.appendChild(line);
+                }
+                
+                if (node.left) {
+                    this.visualize(node.left, parentElement);
+                }
+                if (node.right) {
+                    this.visualize(node.right, parentElement);
+                }
+            }
+        }
+        
+        const tree = new BinaryTree();
+        
+        function addNode() {
+            const value = document.getElementById('nodeValue').value;
+            if (value) {
+                tree.insert(parseInt(value));
+                document.getElementById('tree').innerHTML = '';
+                tree.visualize();
+                document.getElementById('nodeValue').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
